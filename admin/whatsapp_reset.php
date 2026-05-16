@@ -6,10 +6,19 @@ require_once __DIR__ . '/../includes/functions.php';
 protectPage(['admin']);
 
 // Reset commands
-$cmd = 'pkill -f "node server.js" && rm -rf ' . escapeshellarg(__DIR__ . '/../whatsapp_bridge/sessions') . ' && rm -f ' . escapeshellarg(__DIR__ . '/../assets/img/wa_qr.png') . ' && nohup node ' . escapeshellarg(__DIR__ . '/../whatsapp_bridge/server.js') . ' > ' . escapeshellarg(__DIR__ . '/../whatsapp_bridge/server.log') . ' 2>&1 &';
+// 1. Kill any existing node process for the server
+// 2. Remove the session folder (sessions_final)
+// 3. Remove the old QR code image
+// 4. Start the server again in the background
+$bridge_dir = realpath(__DIR__ . '/../whatsapp_bridge');
+$sessions_dir = $bridge_dir . '/sessions_final';
+$qr_image = realpath(__DIR__ . '/../assets/img') . '/wa_qr.png';
+
+// Build command
+$cmd = "pkill -f 'node server.js' || true; rm -rf " . escapeshellarg($sessions_dir) . " " . escapeshellarg($qr_image) . "; cd " . escapeshellarg($bridge_dir) . " && nohup node server.js > server.log 2>&1 &";
 
 exec($cmd);
 
-setFlash('success', 'WhatsApp connection has been reset. Please wait a few seconds for the new QR code.');
+setFlash('success', 'WhatsApp has been disconnected and reset to default state. Please wait a few seconds for a new QR code.');
 header("Location: whatsapp_setup.php");
 exit();

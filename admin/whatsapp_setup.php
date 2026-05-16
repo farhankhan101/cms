@@ -50,14 +50,32 @@ require_once __DIR__ . '/../includes/header.php';
             </div>
         </div>
 
-        <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; display: inline-block; border: 1.5px dashed #ccc;">
-            <p style="font-size: 14px; font-weight: 600; margin-bottom: 10px;">Connection Settings:</p>
+        <div style="background: #fff; padding: 25px; border-radius: 15px; display: inline-block; border: 1px solid #eee; box-shadow: 0 4px 15px rgba(0,0,0,0.05); width: 100%; max-width: 500px;">
+            <p style="font-size: 16px; font-weight: 700; margin-bottom: 15px; color: var(--primary-dark);">Connection Management:</p>
             
-            <form method="POST" action="whatsapp_reset.php" style="margin-top: 10px;">
-                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('This will clear your current WhatsApp session. Continue?')">
-                    <i class="fas fa-sync-alt"></i> Reset/Disconnect WhatsApp
-                </button>
-            </form>
+            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                <form method="POST" action="whatsapp_reset.php" style="flex: 1;">
+                    <button type="submit" class="btn btn-danger" style="width: 100%; white-space: nowrap;" onclick="return confirm('This will disconnect WhatsApp and reset all session data. Continue?')">
+                        <i class="fas fa-power-off"></i> Disconnect & Reset
+                    </button>
+                </form>
+                
+                <a href="whatsapp_setup.php" class="btn btn-secondary" style="flex: 1;">
+                    <i class="fas fa-sync-alt"></i> Refresh Status
+                </a>
+            </div>
+
+            <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #eee; text-align: left;">
+                <p style="font-size: 13px; font-weight: 600; color: #666; margin-bottom: 8px;">
+                    <i class="fas fa-terminal"></i> Server Start Command:
+                </p>
+                <div style="background: #2d3436; color: #fab1a0; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 12px; position: relative; overflow-x: auto;">
+                    <code>cd /opt/lampp/htdocs/cms/whatsapp_bridge && node server.js</code>
+                </div>
+                <p style="font-size: 11px; color: #999; margin-top: 8px;">
+                    * Run this command in your terminal if the bridge status shows "Offline".
+                </p>
+            </div>
         </div>
     </div>
 </div>
@@ -108,4 +126,4 @@ require_once __DIR__ . '/../includes/header.php';
     </p>
 </div>
 
-<?php require_once __DIR__ . '/../includes/header.php'; ?>
+<?php require_once __DIR__ . '/../includes/footer.php'; ?>
