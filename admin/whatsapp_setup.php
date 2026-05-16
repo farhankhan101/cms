@@ -31,7 +31,6 @@ require_once __DIR__ . '/../includes/header.php';
             
             <div id="status-content">
                 <?php if ($status_data['status'] == 'connected'): ?>
-                    <!-- DISCONNECT VIEW (ONLY WHEN CONNECTED) -->
                     <div style="color: #25D366; font-size: 60px; margin-bottom: 20px;">
                         <i class="fas fa-check-circle"></i>
                     </div>
@@ -47,7 +46,6 @@ require_once __DIR__ . '/../includes/header.php';
                     </div>
 
                 <?php else: ?>
-                    <!-- QR CODE VIEW (WHEN NOT CONNECTED) -->
                     <?php if (file_exists('../assets/img/wa_qr.png') && $status_data['status'] == 'qr_ready'): ?>
                         <img src="../assets/img/wa_qr.png?t=<?php echo time(); ?>" id="qr-image" style="width: 250px; border: 10px solid #fff; box-shadow: 0 0 15px rgba(0,0,0,0.1); border-radius: 10px;">
                         <h3 style="margin-top: 20px;">Scan QR Code</h3>
@@ -70,19 +68,6 @@ require_once __DIR__ . '/../includes/header.php';
                 <?php endif; ?>
             </div>
         </div>
-
-        <!-- SERVER MANAGEMENT INFO (ALWAYS VISIBLE AS REFERENCE) -->
-        <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; display: inline-block; border: 1px solid #eee; width: 100%; max-width: 500px; text-align: left;">
-            <p style="font-size: 13px; font-weight: 600; color: #666; margin-bottom: 8px;">
-                <i class="fas fa-terminal"></i> Bridge Server Control:
-            </p>
-            <div style="background: #2d3436; color: #fab1a0; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 12px; overflow-x: auto;">
-                <code>cd /opt/lampp/htdocs/cms/whatsapp_bridge && node server.js</code>
-            </div>
-            <p style="font-size: 11px; color: #999; margin-top: 8px;">
-                * Run this command if the status remains "Offline" for more than 30 seconds.
-            </p>
-        </div>
     </div>
 </div>
 
@@ -94,16 +79,13 @@ require_once __DIR__ . '/../includes/header.php';
             const statusBadge = document.getElementById('status-text');
             const content = document.getElementById('status-content');
             
-            // Current local status from JS state
             const isCurrentlyConnected = content.innerHTML.includes('Connected!');
 
-            // Update badge
             statusBadge.innerText = data.status.charAt(0).toUpperCase() + data.status.slice(1).replace('_', ' ');
             if (data.status === 'connected') statusBadge.className = 'badge badge-success';
             else if (data.status === 'qr_ready') statusBadge.className = 'badge badge-primary';
             else statusBadge.className = 'badge badge-secondary';
 
-            // Auto-reload if status changes significantly
             if (data.status === 'connected' && !isCurrentlyConnected) {
                 location.reload();
             } else if (data.status !== 'connected' && isCurrentlyConnected) {
