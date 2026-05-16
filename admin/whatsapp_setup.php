@@ -31,51 +31,57 @@ require_once __DIR__ . '/../includes/header.php';
             
             <div id="status-content">
                 <?php if ($status_data['status'] == 'connected'): ?>
+                    <!-- DISCONNECT VIEW (ONLY WHEN CONNECTED) -->
                     <div style="color: #25D366; font-size: 60px; margin-bottom: 20px;">
                         <i class="fas fa-check-circle"></i>
                     </div>
                     <h3>WhatsApp Connected!</h3>
                     <p>Your device is successfully linked and ready to send alerts.</p>
-                <?php elseif (file_exists('../assets/img/wa_qr.png')): ?>
-                    <img src="../assets/img/wa_qr.png?t=<?php echo time(); ?>" id="qr-image" style="width: 250px; border: 10px solid #fff; box-shadow: 0 0 15px rgba(0,0,0,0.1); border-radius: 10px;">
-                    <h3 style="margin-top: 20px;">Scan QR Code</h3>
-                    <p>Please scan this code with your WhatsApp app.</p>
+                    
+                    <div style="margin-top: 30px; padding: 20px; border-top: 1px solid #eee;">
+                        <form method="POST" action="whatsapp_reset.php">
+                            <button type="submit" class="btn btn-danger" style="padding: 10px 25px;" onclick="return confirm('Are you sure you want to disconnect WhatsApp?')">
+                                <i class="fas fa-sign-out-alt"></i> Logout / Disconnect
+                            </button>
+                        </form>
+                    </div>
+
                 <?php else: ?>
-                    <div id="loading-wa">
-                        <i class="fas fa-circle-notch fa-spin" style="font-size: 50px; color: var(--primary); margin-bottom: 20px;"></i>
-                        <h3>Initializing...</h3>
-                        <p style="color: var(--text-med);">Please wait while the WhatsApp bridge refreshes.</p>
+                    <!-- QR CODE VIEW (WHEN NOT CONNECTED) -->
+                    <?php if (file_exists('../assets/img/wa_qr.png') && $status_data['status'] == 'qr_ready'): ?>
+                        <img src="../assets/img/wa_qr.png?t=<?php echo time(); ?>" id="qr-image" style="width: 250px; border: 10px solid #fff; box-shadow: 0 0 15px rgba(0,0,0,0.1); border-radius: 10px;">
+                        <h3 style="margin-top: 20px;">Scan QR Code</h3>
+                        <p>Please scan this code with your WhatsApp app.</p>
+                    <?php else: ?>
+                        <div id="loading-wa">
+                            <i class="fas fa-circle-notch fa-spin" style="font-size: 50px; color: var(--primary); margin-bottom: 20px;"></i>
+                            <h3>Initializing...</h3>
+                            <p style="color: var(--text-med);">Please wait while the WhatsApp bridge starts up.</p>
+                        </div>
+                    <?php endif; ?>
+
+                    <div style="margin-top: 30px; padding: 20px; border-top: 1px solid #eee;">
+                        <form method="POST" action="whatsapp_reset.php">
+                            <button type="submit" class="btn btn-secondary btn-sm" onclick="return confirm('This will restart the server and generate a new QR. Continue?')">
+                                <i class="fas fa-sync-alt"></i> Force Reset / Get New QR
+                            </button>
+                        </form>
                     </div>
                 <?php endif; ?>
             </div>
         </div>
 
-        <div style="background: #fff; padding: 25px; border-radius: 15px; display: inline-block; border: 1px solid #eee; box-shadow: 0 4px 15px rgba(0,0,0,0.05); width: 100%; max-width: 500px;">
-            <p style="font-size: 16px; font-weight: 700; margin-bottom: 15px; color: var(--primary-dark);">Connection Management:</p>
-            
-            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-                <form method="POST" action="whatsapp_reset.php" style="flex: 1;">
-                    <button type="submit" class="btn btn-danger" style="width: 100%; white-space: nowrap;" onclick="return confirm('This will disconnect WhatsApp and reset all session data. Continue?')">
-                        <i class="fas fa-power-off"></i> Disconnect & Reset
-                    </button>
-                </form>
-                
-                <a href="whatsapp_setup.php" class="btn btn-secondary" style="flex: 1;">
-                    <i class="fas fa-sync-alt"></i> Refresh Status
-                </a>
+        <!-- SERVER MANAGEMENT INFO (ALWAYS VISIBLE AS REFERENCE) -->
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; display: inline-block; border: 1px solid #eee; width: 100%; max-width: 500px; text-align: left;">
+            <p style="font-size: 13px; font-weight: 600; color: #666; margin-bottom: 8px;">
+                <i class="fas fa-terminal"></i> Bridge Server Control:
+            </p>
+            <div style="background: #2d3436; color: #fab1a0; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 12px; overflow-x: auto;">
+                <code>cd /opt/lampp/htdocs/cms/whatsapp_bridge && node server.js</code>
             </div>
-
-            <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #eee; text-align: left;">
-                <p style="font-size: 13px; font-weight: 600; color: #666; margin-bottom: 8px;">
-                    <i class="fas fa-terminal"></i> Server Start Command:
-                </p>
-                <div style="background: #2d3436; color: #fab1a0; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 12px; position: relative; overflow-x: auto;">
-                    <code>cd /opt/lampp/htdocs/cms/whatsapp_bridge && node server.js</code>
-                </div>
-                <p style="font-size: 11px; color: #999; margin-top: 8px;">
-                    * Run this command in your terminal if the bridge status shows "Offline".
-                </p>
-            </div>
+            <p style="font-size: 11px; color: #999; margin-top: 8px;">
+                * Run this command if the status remains "Offline" for more than 30 seconds.
+            </p>
         </div>
     </div>
 </div>
@@ -88,25 +94,19 @@ require_once __DIR__ . '/../includes/header.php';
             const statusBadge = document.getElementById('status-text');
             const content = document.getElementById('status-content');
             
+            // Current local status from JS state
+            const isCurrentlyConnected = content.innerHTML.includes('Connected!');
+
             // Update badge
             statusBadge.innerText = data.status.charAt(0).toUpperCase() + data.status.slice(1).replace('_', ' ');
             if (data.status === 'connected') statusBadge.className = 'badge badge-success';
             else if (data.status === 'qr_ready') statusBadge.className = 'badge badge-primary';
             else statusBadge.className = 'badge badge-secondary';
 
-            // If status changed to connected and we were not showing connected UI
-            if (data.status === 'connected' && !content.innerHTML.includes('Connected!')) {
-                content.innerHTML = `
-                    <div style="color: #25D366; font-size: 60px; margin-bottom: 20px;">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <h3>WhatsApp Connected!</h3>
-                    <p>Your device is successfully linked and ready to send alerts.</p>
-                `;
-            }
-            
-            // If it was connected but now it's disconnected/qr_ready (meaning we should reload for QR)
-            if (data.status !== 'connected' && content.innerHTML.includes('Connected!')) {
+            // Auto-reload if status changes significantly
+            if (data.status === 'connected' && !isCurrentlyConnected) {
+                location.reload();
+            } else if (data.status !== 'connected' && isCurrentlyConnected) {
                 location.reload();
             }
 
@@ -119,10 +119,13 @@ require_once __DIR__ . '/../includes/header.php';
     setInterval(checkStatus, 3000);
 </script>
 
-<div class="card" style="background: #f0fdf4; border: 1px solid #bbf7d0;">
-    <h4 style="color: #166534; margin-bottom: 10px;"><i class="fas fa-info-circle"></i> WhatsApp Status</h4>
+<div class="card" style="background: #f0fdf4; border: 1px solid #bbf7d0; margin-top: 20px;">
+    <h4 style="color: #166534; margin-bottom: 10px;"><i class="fas fa-info-circle"></i> WhatsApp Instructions</h4>
     <p style="font-size: 14px; color: #166534;">
-        Jab aapka mobile connect ho jayega, toh aapko yahan <b>"Connected"</b> ka status nazar aayega. Uske baad aap kisi bhi shipment ki status update karte waqt WhatsApp alert bhej sakenge.
+        1. Open WhatsApp on your phone.<br>
+        2. Tap <b>Menu</b> or <b>Settings</b> and select <b>Linked Devices</b>.<br>
+        3. Tap on <b>Link a Device</b>.<br>
+        4. Point your phone to this screen to capture the code.
     </p>
 </div>
 

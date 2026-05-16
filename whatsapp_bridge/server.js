@@ -10,6 +10,11 @@ const port = 3005;
 const qrPath = path.join(__dirname, '../assets/img/wa_qr.png');
 const statusPath = path.join(__dirname, 'status.json');
 
+// Initialize status file if it doesn't exist
+if (!fs.existsSync(statusPath)) {
+    fs.writeFileSync(statusPath, JSON.stringify({ status: 'initializing' }));
+}
+
 app.use('/assets', express.static(path.join(__dirname, '../assets')));
 
 const client = new Client({
@@ -18,7 +23,6 @@ const client = new Client({
         dataPath: path.join(__dirname, 'sessions_final')
     }),
     puppeteer: {
-        executablePath: '/usr/bin/google-chrome',
         headless: true,
         args: [
             '--no-sandbox',
@@ -31,12 +35,11 @@ const client = new Client({
 });
 
 client.on('qr', (qr) => {
-    console.log('NEW QR STRING:', qr.substring(0, 30) + '...');
+    console.log('QR RECEIVED');
     qrcode.toFile(qrPath, qr, { scale: 10 }, (err) => {
         if (!err) {
             fs.writeFileSync(statusPath, JSON.stringify({ 
                 status: 'qr_ready', 
-                qr_snippet: qr.substring(0, 10),
                 updated_at: new Date().toLocaleTimeString() 
             }));
         }
@@ -44,8 +47,17 @@ client.on('qr', (qr) => {
 });
 
 client.on('ready', () => {
-    console.log('READY');
+    console.log('CLIENT READY');
+    // Delete QR image when connected to avoid confusion
+    if (fs.existsSync(qrPath)) fs.unlinkSync(qrPath);
     fs.writeFileSync(statusPath, JSON.stringify({ status: 'connected' }));
+});
+
+client.on('disconnected', (reason) => {
+    console.log('CLIENT DISCONNECTED:', reason);
+    fs.writeFileSync(statusPath, JSON.stringify({ status: 'disconnected', reason }));
+    // Cleanup on disconnect
+    if (fs.existsSync(qrPath)) fs.unlinkSync(qrPath);
 });
 
 client.on('auth_failure', msg => {
@@ -54,61 +66,46 @@ client.on('auth_failure', msg => {
 });
 
 client.initialize().catch(err => {
-    console.error('INIT ERR:', err);
+    console.error('INITIALIZATION ERROR:', err.message);
+    fs.writeFileSync(statusPath, JSON.stringify({ status: 'error', message: err.message }));
 });
 
 app.post('/send-message', express.json(), async (req, res) => {
-    console.log('Incoming Message Request:', req.body);
     const { phone, message } = req.body;
     
     if (!phone || !message) {
         return res.status(400).json({ status: 'error', message: 'Phone and message are required' });
     }
 
-    // Check if client is ready
-    const statusData = JSON.parse(fs.readFileSync(statusPath));
-    if (statusData.status !== 'connected') {
-        return res.status(503).json({ status: 'error', message: 'WhatsApp is not connected' });
-    }
-
     try {
-        // Format phone number
-        let cleanPhone = phone.replace(/\D/g, ''); // Remove non-digits
-        
-        // Handle Pakistani numbers: replace leading 03 with 923
+        const statusData = JSON.parse(fs.readFileSync(statusPath));
+        if (statusData.status !== 'connected') {
+            return res.status(503).json({ status: 'error', message: 'WhatsApp is not connected' });
+        }
+
+        let cleanPhone = phone.replace(/\D/g, '');
         if (cleanPhone.startsWith('03') && cleanPhone.length === 11) {
             cleanPhone = '92' + cleanPhone.substring(1);
         } else if (!cleanPhone.startsWith('92') && cleanPhone.length === 10) {
-            // If it's just 10 digits (no leading 0), assume it's PK and add 92
             cleanPhone = '92' + cleanPhone;
         }
 
-        const numberId = cleanPhone.includes('@c.us') ? cleanPhone : `${cleanPhone}@c.us`;
-        
+        const numberId = `${cleanPhone}@c.us`;
         await client.sendMessage(numberId, message);
-        console.log(`Message sent to ${cleanPhone}`);
-        res.json({ status: 'success', sent_to: cleanPhone });
+        res.json({ status: 'success' });
     } catch (error) {
-        console.error('Send error:', error);
         res.status(500).json({ status: 'error', message: error.message });
     }
 });
 
-app.get('/test-send', async (req, res) => {
-    const { phone } = req.query;
-    if (!phone) return res.send('Provide ?phone=923xxxxxxxxx');
-    try {
-        const numberId = phone.includes('@c.us') ? phone : `${phone}@c.us`;
-        await client.sendMessage(numberId, 'Test message from CMSPRO Bridge!');
-        res.send('Test message sent to ' + phone);
-    } catch (e) {
-        res.status(500).send(e.message);
+app.get('/status', (req, res) => {
+    if (fs.existsSync(statusPath)) {
+        res.json(JSON.parse(fs.readFileSync(statusPath)));
+    } else {
+        res.json({ status: 'offline' });
     }
 });
 
-app.get('/status', (req, res) => {
-    if (fs.existsSync(statusPath)) res.json(JSON.parse(fs.readFileSync(statusPath)));
-    else res.json({ status: 'initializing' });
+app.listen(port, () => {
+    console.log(`WhatsApp Bridge running on port ${port}`);
 });
-
-app.listen(port, () => console.log(`Final test on ${port}`));
