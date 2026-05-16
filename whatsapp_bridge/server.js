@@ -13,7 +13,7 @@ const statusPath = path.join(__dirname, 'status.json');
 // Force status to initializing on startup
 fs.writeFileSync(statusPath, JSON.stringify({ status: 'initializing', message: 'Starting bridge...' }));
 
-// CORS Middleware to allow requests from the PHP frontend
+// CORS Middleware
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -28,6 +28,10 @@ const client = new Client({
         clientId: 'cms_final_session',
         dataPath: path.join(__dirname, 'sessions_final')
     }),
+    webVersionCache: {
+        type: 'remote',
+        remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html',
+    },
     puppeteer: {
         headless: true,
         args: [
@@ -35,6 +39,7 @@ const client = new Client({
             '--disable-setuid-sandbox',
             '--disable-dev-shm-usage',
             '--disable-gpu',
+            '--disable-extensions',
             '--window-size=1280,720'
         ]
     }
@@ -75,7 +80,8 @@ client.on('auth_failure', msg => {
 
 client.initialize().catch(err => {
     console.error('INITIALIZATION ERROR:', err.message);
-    fs.writeFileSync(statusPath, JSON.stringify({ status: 'error', message: err.message }));
+    // If it's the execution context error, we might want to suggest a retry
+    fs.writeFileSync(statusPath, JSON.stringify({ status: 'error', message: 'Initialization failed. Please restart the server.' }));
 });
 
 app.post('/send-message', express.json(), async (req, res) => {
