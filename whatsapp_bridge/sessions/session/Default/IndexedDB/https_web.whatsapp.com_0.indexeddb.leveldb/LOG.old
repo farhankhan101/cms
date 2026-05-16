@@ -1,0 +1,5 @@
+2026/05/11-10:11:16.387 8d3b Creating DB /opt/lampp/htdocs/cms/whatsapp_bridge/sessions/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb since it was missing.
+2026/05/11-10:11:16.394 8d3b Reusing MANIFEST /opt/lampp/htdocs/cms/whatsapp_bridge/sessions/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2026/05/11-11:41:43.353 8d3b Level-0 table #5: started
+2026/05/11-11:41:43.476 8d3b Level-0 table #5: 1195135 bytes OK
+2026/05/11-11:41:43.486 8d3b Delete type=0 #3

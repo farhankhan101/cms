@@ -1,0 +1,63 @@
+2026/05/13-16:29:20.997 14759 Creating DB /opt/lampp/htdocs/cms/whatsapp_bridge/sessions_final/session-cms_final_session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb since it was missing.
+2026/05/13-16:29:21.005 14759 Reusing MANIFEST /opt/lampp/htdocs/cms/whatsapp_bridge/sessions_final/session-cms_final_session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2026/05/13-16:31:46.429 14759 Level-0 table #5: started
+2026/05/13-16:31:46.469 14759 Level-0 table #5: 1125454 bytes OK
+2026/05/13-16:31:46.472 14759 Delete type=0 #3
+2026/05/13-16:31:50.291 14758 Level-0 table #7: started
+2026/05/13-16:31:50.330 14758 Level-0 table #7: 1257067 bytes OK
+2026/05/13-16:31:50.333 14758 Delete type=0 #4
+2026/05/13-16:31:50.340 14758 Compacting 1@1 + 1@2 files
+2026/05/13-16:31:50.430 14758 Generated table #8@1: 23604 keys, 1271379 bytes
+2026/05/13-16:31:50.430 14758 Compacted 1@1 + 1@2 files => 1271379 bytes
+2026/05/13-16:31:50.433 14758 compacted to: files[ 0 0 1 0 0 0 0 ]
+2026/05/13-16:31:52.621 14759 Level-0 table #10: started
+2026/05/13-16:31:52.679 14759 Level-0 table #10: 991891 bytes OK
+2026/05/13-16:31:52.683 14759 Delete type=2 #5
+2026/05/13-16:31:52.683 14759 Delete type=2 #7
+2026/05/13-16:31:52.683 14759 Delete type=0 #6
+2026/05/13-16:31:52.703 14759 Compacting 1@1 + 1@2 files
+2026/05/13-16:31:52.769 14759 Generated table #11@1: 29950 keys, 1574522 bytes
+2026/05/13-16:31:52.769 14759 Compacted 1@1 + 1@2 files => 1574522 bytes
+2026/05/13-16:31:52.771 14759 compacted to: files[ 0 0 1 0 0 0 0 ]
+2026/05/13-16:31:52.771 14759 Delete type=2 #8
+2026/05/13-16:31:52.771 14759 Delete type=2 #10
+2026/05/13-16:32:12.411 14759 Level-0 table #13: started
+2026/05/13-16:32:12.460 14759 Level-0 table #13: 1174921 bytes OK
+2026/05/13-16:32:12.462 14759 Delete type=0 #9
+2026/05/13-16:32:12.467 14759 Compacting 1@1 + 1@2 files
+2026/05/13-16:32:12.556 14759 Generated table #14@1: 37119 keys, 2197870 bytes
+2026/05/13-16:32:12.560 14759 Generated table #15@1: 178 keys, 3933 bytes
+2026/05/13-16:32:12.561 14759 Compacted 1@1 + 1@2 files => 2201803 bytes
+2026/05/13-16:32:12.563 14759 compacted to: files[ 0 0 2 0 0 0 0 ]
+2026/05/13-16:32:12.564 14759 Delete type=2 #11
+2026/05/13-16:32:12.564 14759 Delete type=2 #13
+2026/05/13-16:32:14.542 14759 Level-0 table #17: started
+2026/05/13-16:32:14.608 14759 Level-0 table #17: 1288668 bytes OK
+2026/05/13-16:32:14.614 14759 Delete type=0 #12
+2026/05/13-16:32:29.756 14759 Compacting 1@1 + 1@2 files
+2026/05/13-16:32:29.848 14759 Generated table #18@1: 24862 keys, 2182763 bytes
+2026/05/13-16:32:29.901 14759 Generated table #19@1: 15851 keys, 795850 bytes
+2026/05/13-16:32:29.901 14759 Compacted 1@1 + 1@2 files => 2978613 bytes
+2026/05/13-16:32:29.904 14759 compacted to: files[ 0 0 3 0 0 0 0 ]
+2026/05/13-16:32:29.905 14759 Delete type=2 #14
+2026/05/13-16:32:29.906 14759 Delete type=2 #17
+2026/05/13-16:32:40.094 14758 Level-0 table #21: started
+2026/05/13-16:32:40.256 14758 Level-0 table #21: 1113563 bytes OK
+2026/05/13-16:32:40.263 14758 Delete type=0 #16
+2026/05/13-16:32:40.298 14764 Compacting 1@1 + 3@2 files
+2026/05/13-16:32:40.501 14764 Generated table #22@1: 24825 keys, 2182114 bytes
+2026/05/13-16:32:40.656 14764 Generated table #23@1: 29518 keys, 1221776 bytes
+2026/05/13-16:32:40.656 14764 Compacted 1@1 + 3@2 files => 3403890 bytes
+2026/05/13-16:32:40.661 14764 compacted to: files[ 0 0 2 0 0 0 0 ]
+2026/05/13-16:37:34.296 14759 Level-0 table #25: started
+2026/05/13-16:37:34.347 14759 Level-0 table #25: 1051300 bytes OK
+2026/05/13-16:37:34.351 14759 Delete type=2 #19
+2026/05/13-16:37:34.351 14759 Delete type=2 #18
+2026/05/13-16:37:34.351 14759 Delete type=2 #15
+2026/05/13-16:37:34.351 14759 Delete type=2 #21
+2026/05/13-16:37:34.351 14759 Delete type=0 #20
+2026/05/13-16:37:35.754 14759 Compacting 1@1 + 2@2 files
+2026/05/13-16:37:35.837 14759 Generated table #26@1: 26370 keys, 2179010 bytes
+2026/05/13-16:37:35.897 14759 Generated table #27@1: 32423 keys, 1386459 bytes
+2026/05/13-16:37:35.897 14759 Compacted 1@1 + 2@2 files => 3565469 bytes
+2026/05/13-16:37:35.899 14759 compacted to: files[ 0 0 2 0 0 0 0 ]

@@ -1,0 +1,28 @@
+2026/05/14-01:55:00.051 1e2c Reusing MANIFEST /opt/lampp/htdocs/cms/whatsapp_bridge/sessions_final/session-cms_final_session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2026/05/14-01:55:00.054 1e2c Recovering log #24
+2026/05/14-01:55:00.128 1e2c Reusing old log /opt/lampp/htdocs/cms/whatsapp_bridge/sessions_final/session-cms_final_session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000024.log 
+2026/05/14-01:55:00.128 1e2c Delete type=2 #22
+2026/05/14-01:55:00.129 1e2c Delete type=2 #23
+2026/05/14-01:55:00.129 1e2c Delete type=2 #25
+2026/05/14-02:21:53.024 1e2d Level-0 table #30: started
+2026/05/14-02:21:53.081 1e2d Level-0 table #30: 1351723 bytes OK
+2026/05/14-02:21:53.085 1e2d Delete type=0 #24
+2026/05/14-02:21:53.367 1e2e Compacting 1@1 + 2@2 files
+2026/05/14-02:21:53.478 1e2e Generated table #31@1: 32329 keys, 2184298 bytes
+2026/05/14-02:21:53.594 1e2e Generated table #32@1: 34270 keys, 1819851 bytes
+2026/05/14-02:21:53.595 1e2e Compacted 1@1 + 2@2 files => 4004149 bytes
+2026/05/14-02:21:53.598 1e2e compacted to: files[ 0 0 2 0 0 0 0 ]
+2026/05/14-02:21:53.599 1e2e Delete type=2 #26
+2026/05/14-02:21:53.599 1e2e Delete type=2 #27
+2026/05/14-02:21:53.599 1e2e Delete type=2 #30
+2026/05/14-02:45:15.261 1e2d Level-0 table #34: started
+2026/05/14-02:45:15.315 1e2d Level-0 table #34: 1377958 bytes OK
+2026/05/14-02:45:15.320 1e2d Delete type=0 #29
+2026/05/14-02:46:55.535 1e2d Compacting 1@1 + 2@2 files
+2026/05/14-02:46:55.616 1e2d Generated table #35@1: 34493 keys, 2191437 bytes
+2026/05/14-02:46:55.669 1e2d Generated table #36@1: 34841 keys, 1952584 bytes
+2026/05/14-02:46:55.670 1e2d Compacted 1@1 + 2@2 files => 4144021 bytes
+2026/05/14-02:46:55.672 1e2d compacted to: files[ 0 0 2 0 0 0 0 ]
+2026/05/14-02:46:55.673 1e2d Delete type=2 #34
+2026/05/14-02:46:55.673 1e2d Delete type=2 #32
+2026/05/14-02:46:55.673 1e2d Delete type=2 #31
