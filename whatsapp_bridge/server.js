@@ -10,10 +10,16 @@ const port = 3005;
 const qrPath = path.join(__dirname, '../assets/img/wa_qr.png');
 const statusPath = path.join(__dirname, 'status.json');
 
-// Initialize status file if it doesn't exist
-if (!fs.existsSync(statusPath)) {
-    fs.writeFileSync(statusPath, JSON.stringify({ status: 'initializing' }));
-}
+// Force status to initializing on startup
+fs.writeFileSync(statusPath, JSON.stringify({ status: 'initializing', message: 'Starting bridge...' }));
+
+// CORS Middleware to allow requests from the PHP frontend
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+});
 
 app.use('/assets', express.static(path.join(__dirname, '../assets')));
 
@@ -48,16 +54,18 @@ client.on('qr', (qr) => {
 
 client.on('ready', () => {
     console.log('CLIENT READY');
-    // Delete QR image when connected to avoid confusion
-    if (fs.existsSync(qrPath)) fs.unlinkSync(qrPath);
+    if (fs.existsSync(qrPath)) {
+        try { fs.unlinkSync(qrPath); } catch(e) {}
+    }
     fs.writeFileSync(statusPath, JSON.stringify({ status: 'connected' }));
 });
 
 client.on('disconnected', (reason) => {
     console.log('CLIENT DISCONNECTED:', reason);
     fs.writeFileSync(statusPath, JSON.stringify({ status: 'disconnected', reason }));
-    // Cleanup on disconnect
-    if (fs.existsSync(qrPath)) fs.unlinkSync(qrPath);
+    if (fs.existsSync(qrPath)) {
+        try { fs.unlinkSync(qrPath); } catch(e) {}
+    }
 });
 
 client.on('auth_failure', msg => {
